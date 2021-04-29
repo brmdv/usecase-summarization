@@ -50,15 +50,30 @@ class Book:
     def get_paragraphs(self, chapter=None, section=None):
         """Generator for all paragraphs in a selected chapter (and section). If they are not specified, the full book will be traversed."""
 
+        # select body of the chapter
         if chapter is None:
-            body = self.soup.body
+            current_p = self.soup.body.find("p")
         else:
-            body = self._get_chapter(chapter)
+            current_p = self._get_chapter(chapter).find("p")
+        # subsection case
         if section is not None and len(self.chapter_tree[chapter]) > 0:
-            body = body.select("h4")[section]
+            current_p = current_p.parent.select("h4")[section]
 
-        for p in body.select("p"):
-            yield re.sub(r"\s+", " ", p.get_text(strip=True, separator=" "))
+        # loop
+        while current_p is not None:
+            if section is not None:
+                if current_p.nextSibling.name == "h4":
+                    break
+
+            if current_p.name == "p":
+                p = re.sub(r"\s+", " ", current_p.get_text(strip=True, separator=" "))
+                # take care of big stylish character at beginning
+                if current_p.select(".dropcap"):
+                    p = p[0] + p[2:]
+
+                yield p
+
+            current_p = current_p.nextSibling
 
 
 if __name__ == "__main__":
@@ -76,5 +91,6 @@ if __name__ == "__main__":
 
     logger.info("Loading Sherlock.html as a test.")
     test_book = Book("books/Sherlock.html")
-    print("\n".join(test_book.get_paragraphs(1, 1)))
+    p = test_book.get_paragraphs(0, 0)
+    print(p.__next__())
     pass
