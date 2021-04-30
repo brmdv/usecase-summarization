@@ -39,8 +39,7 @@ class Book:
         self._chapter_tag = chapter_tag
 
         self.chapter_names = [
-            title.text.strip()
-            for title in self.soup.select(f".chapter {self._chapter_tag}")
+            title.text.strip() for title in self.soup.select(f"{self._chapter_tag}")
         ]
 
         self.logger.debug(
@@ -59,7 +58,7 @@ class Book:
 
         # loop
         while current_p is not None:
-            if current_p.nextSibling.name == self._chapter_tag:
+            if current_p.name == self._chapter_tag:
                 break
             if current_p.name == "p":
                 p = re.sub(r"\s+", " ", current_p.get_text(strip=True, separator=" "))
