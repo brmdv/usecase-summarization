@@ -28,8 +28,12 @@ class Book:
 
         # get the meta information
         self.logger.info("Parsing meta information.")
-        self.book_title = self.soup.find("h1").text.strip()
-        self.book_author = self.soup.find("h2").text.strip().lstrip("by ")
+        try:
+            self.book_title = self.soup.find("h1").text.strip()
+            self.book_author = self.soup.find("h2").text.strip().lstrip("by ")
+        except:
+            self.book_title = self.soup.find("h1").text.strip()
+            self.book_author = "AUTHOR"
 
         # chapter detection
         self._chapter_tag = chapter_tag
@@ -51,7 +55,7 @@ class Book:
         if chapter is None:
             current_p = self.soup.body.find("p")
         else:
-            current_p = self._get_chapter(chapter)
+            current_p = self.soup.select(self._chapter_tag)[chapter]
 
         # loop
         while current_p is not None:
