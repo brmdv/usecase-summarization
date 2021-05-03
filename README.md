@@ -18,3 +18,5 @@ These methods can produce quite impressive results for news articles and other n
   - Stories can **not** be summarized with **extractive methods**, i.e. picking and choosing the right sentences to get the most important ideas. Moreover, sentences often depend on their **context** and don’t mean much without their siblings.
   - **Long**, **stylistic** sentences, that can hold important information.
   - **Dialogue** is insanely complicated. Not only does it matter who says what, it is not even easy to pin-point the speaker, as for long dialogues, this is often represented merely by the alternation of quotations.
+
+In order to get good results for book summaries, we need to do some smart preprocessing. 

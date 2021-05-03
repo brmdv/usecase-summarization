@@ -20,7 +20,7 @@ class Book:
         self.logger.info(f"Parsing {filename} with BeautifulSoup.")
         try:
             with open(filename, "r") as f:
-                self.soup = bs(f.read(), features="lxml")
+                self.soup = bs(f.read(), features="html.parser")
         except FileNotFoundError:
             self.logger.critical(f"File {filename} not found.")
         except Exception:
@@ -54,7 +54,7 @@ class Book:
         if chapter is None:
             current_p = self.soup.body.find("p")
         else:
-            current_p = self.soup.select(self._chapter_tag)[chapter]
+            current_p = self.soup.select(self._chapter_tag)[chapter].nextSibling
 
         # loop
         while current_p is not None:
