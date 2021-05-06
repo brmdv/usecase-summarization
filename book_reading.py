@@ -64,7 +64,12 @@ class Book:
             self.logger.debug(f"Selected {self._chapter_tag} for chapter headers.")
 
         self.chapter_names = [
-            title.text.strip() for title in self.soup.select(f"{self._chapter_tag}")
+            title.text.strip()
+            for title in self.soup.select(f"{self._chapter_tag}")
+            if not (
+                "contents" in title.text.lower()  # remove table of contents
+                or title.text.strip().lower().startswith("by ")  # remove author tags
+            )
         ]
 
         self.logger.debug(
