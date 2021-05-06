@@ -1,6 +1,6 @@
 # Text summarization with NLP
 
-The goal of this project, on behalf of [Algorhythm](https://algorhythm.be/), is to explore the current state of Natural Language Processing for text summarization.
+The goal of this project, on behalf of [Algorhythm](https://algorhythm.be/), is to explore the current state of Natural Language Processing for text summarization. There is also a [webapp](https://brams-book-summarizer.herokuapp.com) to showcase some results ([repository](https://github.com/brmdv/summarization-webapp/)).
 
 ## Technical details
 
@@ -67,13 +67,11 @@ In the limited time I didn't manage to get any good results. However, I did get 
    3. The selection of the chunks that are passed to the summarization model. If too much information is passed. Just passing text paragraph by paragraph probably wont do. Maybe superfluous, extra descriptive text can be detected and thrown away. 
 
 2. All current models are pretrained on informative texts. One should at least try to train a model on summarizes stories, but generating the **training set** would need a lot of human labor. 
-   
    * One could **manually write** short summaries for all Gutenberg books, or even one summary per chapter.
-   
    * Some clever **webscraping** to collect the *back cover text* of some books (although they're mostly teasers that don't contain major plot points). Or one could try to collect summaries from online book reviews, which often start with an overview of the story by the reviewer. 
 
 ## Links and further reading
 
 * [Huggingface Transformers Library](https://github.com/huggingface/transformers)
-
 * [Huggingface Summarization Models](https://huggingface.co/models?pipeline_tag=summarization) 
+* [SpaCy]()
