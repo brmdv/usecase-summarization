@@ -1,9 +1,11 @@
 import logging
 import re
+import unittest
 from collections import Counter
 
 from bs4 import BeautifulSoup as bs
 
+# use logging for practice
 logger = logging.getLogger(__name__)
 logger.setLevel(-1)
 
@@ -44,11 +46,11 @@ class Book:
                 r"Title: ([^<\n]+)", str(self.soup.body)[:1000]
             ).group(1)
         except:
-            self.logger.warning(f"Title and auhtor not automatically found")
+            self.logger.warning(f"Title and author not automatically found.")
             self.book_title = self.soup.find("h1").text.strip()
             self.book_author = "AUTHOR NOT FOUND"
 
-        # chapter detection
+        # chapter tag detection: which h-level?
         if chapter_tag is not None:
             self._chapter_tag = chapter_tag
         else:
@@ -88,7 +90,7 @@ class Book:
         else:
             current_p = self.soup.select(self._chapter_tag)[chapter].nextSibling
 
-        # loop
+        # loop through chapter body
         while current_p is not None:
             if current_p.name == self._chapter_tag:
                 break
@@ -103,7 +105,7 @@ class Book:
             current_p = current_p.nextSibling
 
     def get_chapter(self, chapter: int, merge: bool = False):
-        """Return al text of chapter with given number.
+        """Return all text of chapter with given number.
 
         :param chapter: chapter number
         :param merge: Whether paragraphs should be merged, separated by two newlines, default False.
@@ -114,22 +116,31 @@ class Book:
             return [*self.get_paragraphs(chapter)]
 
 
-if __name__ == "__main__":
-    # setup basic logger
-    logstream = logging.StreamHandler()
-    logstream.setLevel(logging.DEBUG)
-    logstream.setFormatter(
-        logging.Formatter(
-            "{asctime} {name:15s} {levelname:8s} {message}",
-            style="{",
-            datefmt="%H:%m:%S",
+# Just for developing/testing purposes
+class Testing(unittest.TestCase):
+    def setup(self):
+        # setup basic logger
+        logstream = logging.StreamHandler()
+        logstream.setLevel(logging.DEBUG)
+        logstream.setFormatter(
+            logging.Formatter(
+                "{asctime} {name:15s} {levelname:8s} {message}",
+                style="{",
+                datefmt="%H:%m:%S",
+            )
         )
-    )
-    logger.addHandler(logstream)
+        logger.addHandler(logstream)
 
-    test_file = "books/80days.html"
-    logger.info(f"Loading {test_file} as a test.")
-    test_book = Book(test_file)
-    p = test_book.get_paragraphs(1)
-    # print([*p])
-    pass
+    def test_parse_book(self):
+        test_file = "books/80days.html"
+        logger.info(f"Loading {test_file} as a test.")
+        test_book = Book(test_file)
+        p = [*test_book.get_paragraphs(1)]
+        self.assertEqual(
+            p[0],
+            """Mr. Phileas Fogg lived, in 1872, at No. 7, Saville Row, Burlington Gardens, the house in which Sheridan died in 1814. He was one of the most noticeable members of the Reform Club, though he seemed always to avoid attracting attention; an enigmatical personage, about whom little was known, except that he was a polished man of the world. People said that he resembled Byron—at least that his head was Byronic; but he was a bearded, tranquil Byron, who might live on a thousand years without growing old.""",
+        )
+
+
+if __name__ == "__main__":
+    unittest.main()
